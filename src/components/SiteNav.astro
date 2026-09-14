@@ -1,0 +1,37 @@
+---
+import { navItems } from '../data/nav';
+
+/*
+  In the frame the nav is a single text node whose item spacing is runs of literal
+  spaces, and the rule beneath it is an exported 1px vector (stroke #1F3352 @ 40%).
+  Both are rebuilt as real elements here: a list with a flex gap, and a bordered div.
+
+  The phone frame `71:159` splits the same six items over two text nodes, three and
+  three. A three-column grid reproduces that split exactly; leaving it to flex-wrap
+  would land four on the first row at most phone widths. The grid is content-width
+  and centred, so the two rows stay a cluster in the middle of the band rather than
+  spreading to the margins. From `sm` up it is the single centred row of the
+  desktop frame again.
+*/
+const current = Astro.url.pathname.replace(/(.+)\/$/, '$1');
+---
+<nav aria-label="Primary" class="mx-auto w-full max-w-column px-gutter pt-2">
+  <ul
+    class="mx-auto grid w-fit list-none grid-cols-3 justify-items-center gap-x-6 gap-y-1 p-0 font-nav text-nav text-quiet sm:flex sm:flex-wrap sm:items-baseline sm:justify-center"
+  >
+    {
+      navItems.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            aria-current={current === item.href ? 'page' : undefined}
+            class="text-quiet no-underline transition-colors hover:text-navy aria-[current=page]:text-black"
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="mx-auto mt-1 h-px w-full max-w-rule bg-rule"></div>
+</nav>

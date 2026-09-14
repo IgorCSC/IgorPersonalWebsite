@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import portrait from '../assets/portrait_hr.png';
+
+const title = 'Igor de Camargo e Souza Câmara';
+const description =
+  'Personal site of Igor de Camargo e Souza Câmara — senior applied AI researcher in São Paulo, Brazil, working on explainable AI for law and AI policy.';
+
+/*
+  Copy is transcribed verbatim from the Figma frame. The email in the final
+  paragraph is deliberately written out in words to defeat address scrapers --
+  do not turn it into a `mailto:` or reassemble it anywhere in the markup.
+*/
+const paragraphs = [
+  "Hello there! I'm Igor, first and foremost a human being of the father class. Currently, I reside with my incredible family in São Paulo, Brazil, where I was born and raised.",
+  'My core values are kindness, curiosity, and promoting human flourishing & autonomy.',
+  'I never believed in the two cultures paradigm that etches a hard division between humanities and hard sciences. I am interested in literature, photography, music, philosophy, sports and physical activities, hiking and nature, science and economics in general.',
+  "Professionally, I'm a bit all around the place. I have a bachelors and a masters in Philosophy and a PhD in Computer Science. After graduating, I worked at private companies in knowledge engineering and data science related roles. Currently, I work as a senior applied AI researcher at CIAM, where I develop explainable AI tooling for law and AI policy and risk monitoring.",
+  'Here are some books, films and games that are important to me.',
+  "If you have something to share, please, don't hesitate and reach me out at igor zero csc at gmail. By 'zero' I mean the digit. I'd love to get in touch!",
+];
+---
+
+<Base title={title} description={description}>
+  <div class="grid gap-gutter pt-6 md:grid-cols-[var(--spacing-figure)_1fr]">
+    {/*
+      From `md` up the portrait is absolutely positioned inside the figure, so it
+      contributes no intrinsic height. That lets the grid row take its height from
+      the prose column alone, and `h-full` then matches the photo to it exactly.
+      Below `md` the image goes back to normal flow, cropped to the phone frame's
+      landscape box.
+    */}
+    <figure
+      class="relative m-0 w-full max-w-figure-narrow justify-self-center sm:max-w-figure md:h-full md:justify-self-start"
+    >
+      {/*
+        `sizes` is in rem on purpose: rem resolves against the root font size,
+        which scales with the viewport, so these track the real rendered width
+        instead of drifting from it. The md figure is 16.375rem wide, but
+        object-cover scales the image to cover a box that is proportionally
+        taller than the source, so it paints roughly 1.1x the track width.
+
+        Below `md` the same source is cropped to the phone frame's landscape box.
+        The source is much taller than that box, so `object-cover` shows only the
+        middle ~39% of its height; positioning that band at 32% lands both faces
+        in frame, which is the crop the mock uses.
+      */}
+      <Image
+        src={portrait}
+        alt="Igor standing among tall tree trunks on a forest trail, a young child perched on his shoulders reaching out toward the bark."
+        widths={[420, 524, 840, 1260]}
+        sizes="(min-width: 768px) 18rem, min(100vw, 12.3125rem)"
+        width={840}
+        height={1398}
+        loading="eager"
+        fetchpriority="high"
+        class="block aspect-figure-narrow h-auto w-full object-cover object-[center_32%] md:absolute md:inset-0 md:aspect-auto md:h-full md:w-full md:object-center"
+      />
+    </figure>
+
+    <div class="flex flex-col gap-5 text-body">
+      {paragraphs.map((text) => <p class="m-0">{text}</p>)}
+    </div>
+  </div>
+</Base>

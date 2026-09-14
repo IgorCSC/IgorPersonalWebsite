@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@import "@fontsource-variable/eb-garamond";
+@import "@fontsource-variable/cormorant-garamond";
+
+/*
+  Every token below traces to the Figma frame `71:121` (Landing_computer, 800x521).
+  Type and spacing are the frame's values x 1.2 -- same proportions, readable on screen.
+  Components must not hardcode design values; add a token here instead.
+*/
+@theme {
+  /* Palette */
+  --color-parchment: #f8f5f0;          /* page background */
+  --color-navy: #1f3352;               /* masthead band */
+  --color-cream: #f2f2f7;              /* wordmark on navy */
+  --color-ink: rgb(0 0 0 / 0.8);       /* body copy */
+  --color-quiet: rgb(0 0 0 / 0.6);     /* nav, at rest */
+  --color-rule: rgb(31 51 82 / 0.4);   /* the 1px rule under the nav */
+
+  /* Faces */
+  --font-display: "EB Garamond Variable", "EB Garamond", Georgia, serif;
+  --font-nav: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, serif;
+
+  /* Type scale */
+  --text-body: 1.0625rem;                        /* 14 x 1.2 */
+  --text-body--line-height: 1.6;
+  --text-nav: clamp(1.125rem, 2.2vw, 1.5rem);    /* 20 x 1.2 = 24 ceiling */
+  /*
+    57 x 1.2 = 68 ceiling. The 6.6vw step is deliberate, not round: the wordmark
+    sets to roughly 13.1x its font-size, so anything larger wraps it to two lines
+    between ~640 and ~1000px. It still wraps below ~500px, which is expected.
+  */
+  --text-mark: clamp(1.75rem, 6.6vw, 4.25rem);
+
+  /* Measure */
+  --container-column: 60rem;    /* 800 x 1.2 = 960 content cap */
+  --spacing-figure: 16.375rem;  /* 218 x 1.2 = 262 portrait column */
+  --spacing-gutter: 2.125rem;   /* 28 x 1.2 = 34 gutter + page padding */
+  --spacing-rule: 22.5rem;      /* 300 x 1.2 = 360 rule width */
+  --spacing-masthead: 5.875rem; /* 78 x 1.2 = 94 visible band height */
+
+  /*
+    Phone frame `71:159` (Landing_Mobile_prototype, 398 wide) keeps the desktop
+    proportions but turns the portrait on its side: a 197x127 crop, centred above
+    the prose, so the photo costs about a third of the first screen instead of
+    all of it. Both values are the frame's, unscaled -- the root font size is
+    already at its 1rem floor on a phone, so the frame and the page agree there.
+  */
+  --spacing-figure-narrow: 12.3125rem; /* 197 crop width */
+  --aspect-figure-narrow: 197 / 127;
+
+  /*
+    Optical lift for the wordmark. EB Garamond's descenders (the g's in "Igor"
+    and "Camargo") drop well below the baseline, so centring the text box
+    geometrically leaves the ink sitting visibly low in the band. Padding the
+    bottom of the h1 pushes the ink up by half this value.
+  */
+  --spacing-mark-lift: 0.8rem;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-parchment);
+
+    /*
+      The whole layout scales with the viewport, which is what Figma's zoom-to-fit
+      is doing when the 800px frame appears to fill the screen. Every token below
+      is expressed in rem, so moving the root size moves type, photo, gutters and
+      column together -- proportions and characters-per-line stay put while the
+      page fills a large display.
+
+      The `min()` takes whichever of width or height is the binding constraint,
+      so the page also fits a normal browser window vertically -- the landing
+      copy lands roughly one viewport tall with a little air beneath it, instead
+      of scaling off the bottom of a short window. On narrow screens the vw term
+      always wins and falls to the 1rem floor, so phones are unaffected.
+
+      `1rem` here resolves against the browser's default size, not this
+      declaration, so a reader who has raised their default font size keeps it.
+      Do not swap these for px values -- that would override that preference.
+    */
+    font-size: clamp(1rem, min(1.6vw, 2.2vh), 1.5rem);
+  }
+
+  body {
+    background-color: var(--color-parchment);
+    color: var(--color-ink);
+    font-family: var(--font-display);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-navy);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

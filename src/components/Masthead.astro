@@ -1,0 +1,25 @@
+---
+/*
+  The navy band. In Figma the rectangle is 900px wide on an 800px frame and sits at
+  y=-35 -- it overhangs both edges, which reads as "this band runs edge to edge".
+  So the band is full-bleed and only its contents are capped at the content column.
+
+  The phone frame breaks the wordmark after "Camargo" and gives the band two lines.
+  Left to itself the text would instead squeeze onto one line that touches both
+  margins, so below `sm` each half is its own block; from `sm` up they are inline
+  again and the line breaks (or doesn't) wherever the width allows.
+*/
+---
+<header class="w-full bg-navy">
+  <div
+    class="mx-auto flex min-h-masthead max-w-column items-center justify-center px-gutter"
+  >
+    <h1
+      class="m-0 pb-mark-lift text-center font-display text-mark font-medium leading-tight text-cream/80"
+    >
+      <span class="block sm:inline">Igor de Camargo</span>{' '}<span
+        class="block sm:inline">e Souza Câmara</span
+      >
+    </h1>
+  </div>
+</header>

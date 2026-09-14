@@ -1,0 +1,19 @@
+---
+interface Props {
+  section: string;
+}
+
+const { section } = Astro.props;
+---
+<div class="flex flex-col gap-5 pt-6 text-body">
+  <p class="m-0">
+    This is where {section} will live. I haven't written it yet — the page exists so
+    the rest of the site can already point at it.
+  </p>
+  <p class="m-0">
+    In the meantime, there's more about me on the <a
+      href="/"
+      class="text-navy underline underline-offset-2">home page</a
+    >.
+  </p>
+</div>
