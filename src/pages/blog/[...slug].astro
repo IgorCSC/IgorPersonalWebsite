@@ -1,0 +1,121 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PostMeta from '../../components/PostMeta.astro';
+import type { Post } from '../../utils/posts';
+
+interface Props {
+  post: Post;
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection('blog', ({ data }) => import.meta.env.DEV || !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+};
+
+const { post } = Astro.props;
+const { title, description, cover, coverAlt } = post.data;
+const { Content } = await render(post);
+---
+
+<Base title={`${title} — Igor de Camargo e Souza Câmara`} description={description ?? title}>
+  <article class="pt-6">
+    <header class="flex flex-col gap-2">
+      <h2 class="m-0 font-display text-section font-medium text-navy/90">{title}</h2>
+      <PostMeta post={post} class="text-body text-ink/70" />
+    </header>
+
+    {
+      cover && (
+        /*
+          The landing page crops covers square to match the frame's thumbnails.
+          At the prose measure a square is nearly a full screen of image before a
+          word of the post is visible, so the same source is cropped to 3:2 here.
+        */
+        <Image
+          src={cover}
+          alt={coverAlt ?? ''}
+          widths={[420, 640, 960]}
+          sizes="min(100vw, 42rem)"
+          class="mt-6 block aspect-3/2 w-full max-w-prose object-cover"
+        />
+      )
+    }
+
+    <div class="prose mt-6 flex max-w-prose flex-col gap-5 text-body">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+{/*
+  `<Content />` renders markdown that Astro's scoped-style hashing never sees, so
+  these rules are global and namespaced by `.prose` instead. Kept deliberately
+  small -- the site has no typography plugin and shouldn't grow one for this.
+*/}
+<style is:global>
+  .prose > * {
+    margin: 0;
+  }
+
+  .prose h2,
+  .prose h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--color-navy);
+    line-height: 1.3;
+  }
+
+  .prose h2 {
+    font-size: var(--text-section);
+  }
+
+  .prose h3 {
+    font-size: var(--text-body);
+  }
+
+  .prose a {
+    color: var(--color-navy);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prose ul,
+  .prose ol {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-left: 1.25rem;
+  }
+
+  .prose ul {
+    list-style: disc;
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose blockquote {
+    border-left: 1px solid var(--color-rule);
+    padding-left: 1rem;
+    font-style: italic;
+  }
+
+  .prose img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .prose code {
+    font-size: 0.9em;
+  }
+
+  .prose pre {
+    overflow-x: auto;
+    padding: 1rem;
+  }
+</style>

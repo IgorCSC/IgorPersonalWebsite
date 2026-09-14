@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ComingSoon from '../../components/ComingSoon.astro';
+import PostCard from '../../components/PostCard.astro';
+import PostMeta from '../../components/PostMeta.astro';
+
+/*
+  Drafts are authoring scaffolding: visible while running `astro dev`, gone from
+  anything that ships.
+*/
+const posts = (await getCollection('blog', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+/*
+  Frame `120:16`: the two most recent posts get a thumbnail and an abstract in
+  the left column, everything older falls to the `past` column on the right.
+  When there are two or fewer posts the archive heading has nothing under it, so
+  it is omitted rather than left hanging.
+*/
+const recent = posts.slice(0, 2);
+const past = posts.slice(2);
+---
+
+<Base
+  title="Blog — Igor de Camargo e Souza Câmara"
+  description="Writing by Igor de Camargo e Souza Câmara."
+>
+  {posts.length === 0 && <ComingSoon section="the blog" />}
+
+  {
+    posts.length > 0 && (
+      <div class="grid gap-gutter pt-6 md:grid-cols-[1fr_var(--spacing-past)]">
+        <ul class="flex list-none flex-col gap-10 p-0">
+          {recent.map((post) => (
+            <li>
+              <PostCard post={post} />
+            </li>
+          ))}
+        </ul>
+
+        {past.length > 0 && (
+          <aside>
+            <h2 class="m-0 text-center font-display text-section font-medium text-navy/90">
+              past
+            </h2>
+            {/*
+              From `md` up the archive scrolls inside its own column, so the two
+              recent posts stay in view however long the list gets. `overscroll-contain`
+              stops a scroll that reaches the end of the list from carrying on
+              into the page. Below `md` this is all inert: the column is full
+              width and sits in normal page flow, because a nested scroll area
+              on a phone is a reliable way to trap a reader's thumb.
+            */}
+            <ul
+              class="mt-4 flex list-disc flex-col gap-2 pl-5 text-body md:max-h-[60vh] md:overflow-y-auto md:overscroll-contain md:pr-2"
+            >
+              {past.map((post) => (
+                <li>
+                  <a
+                    href={`/blog/${post.id}`}
+                    class="text-ink no-underline hover:underline hover:underline-offset-2"
+                  >
+                    {post.data.title}
+                  </a>
+                  {'. '}
+                  <PostMeta post={post} />
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )}
+      </div>
+    )
+  }
+</Base>

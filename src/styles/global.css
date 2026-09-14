@@ -30,6 +30,8 @@
     between ~640 and ~1000px. It still wraps below ~500px, which is expected.
   */
   --text-mark: clamp(1.75rem, 6.6vw, 4.25rem);
+  --text-section: 1.2rem;                        /* 16 x 1.2 -- post titles, `past` heading */
+  --text-meta: 0.975rem;                         /* 13 x 1.2 -- the date/language line */
 
   /* Measure */
   --container-column: 60rem;    /* 800 x 1.2 = 960 content cap */
@@ -37,6 +39,16 @@
   --spacing-gutter: 2.125rem;   /* 28 x 1.2 = 34 gutter + page padding */
   --spacing-rule: 22.5rem;      /* 300 x 1.2 = 360 rule width */
   --spacing-masthead: 5.875rem; /* 78 x 1.2 = 94 visible band height */
+
+  /*
+    Blog frame `120:16` (Blog_computer, 800x521). Two columns: the recent posts
+    run down the left as thumbnail-plus-summary rows, and the `past` archive is
+    a narrow column on the right with its own scrollbar.
+  */
+  --spacing-thumb: 11.75rem;    /* 157 x 1.2 = 188 thumbnail edge */
+  --spacing-summary: 16.25rem;  /* 217 x 1.2 = 260 summary measure */
+  --spacing-past: 18.125rem;    /* 242 x 1.2 = 290 archive column */
+  --container-prose: 42rem;     /* post-page body measure */
 
   /*
     Phone frame `71:159` (Landing_Mobile_prototype, 398 wide) keeps the desktop

@@ -1,0 +1,14 @@
+---
+import type { Post } from '../utils/posts';
+import { formatPostMeta, isoDate } from '../utils/posts';
+
+interface Props {
+  post: Post;
+  class?: string;
+}
+
+const { post, class: className } = Astro.props;
+---
+<time datetime={isoDate(post.data.date)} class={className}>
+  {formatPostMeta(post.data)}
+</time>

@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import type { Post } from '../utils/posts';
+import PostMeta from './PostMeta.astro';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, cover, coverAlt } = post.data;
+---
+{/*
+  One of the two recent posts from frame `120:16`: a square thumbnail with the
+  title, the date line and a short abstract set beside it. The whole card is a
+  single link -- nesting a second anchor around the title would give the same
+  destination two tab stops.
+
+  Below `sm` the row becomes a column. The thumbnail is 11.75rem, which is most
+  of a phone's width once the page gutters are taken out, so keeping it beside
+  the text would leave the abstract setting three or four words to the line.
+*/}
+<a
+  href={`/blog/${post.id}`}
+  class="group flex flex-col gap-4 no-underline sm:flex-row"
+>
+  {
+    cover && (
+      /*
+        `sizes` is in rem because the root font size is fluid (see the html rule
+        in global.css) -- the thumbnail is 11.75rem at every breakpoint but
+        paints anywhere from 188 to 282 CSS px, so the widths list carries 2x
+        for both ends of that range.
+      */
+      <Image
+        src={cover}
+        alt={coverAlt ?? ''}
+        widths={[188, 282, 376, 564]}
+        sizes="11.75rem"
+        class="block aspect-square w-thumb shrink-0 object-cover"
+      />
+    )
+  }
+  <div class="flex max-w-summary flex-col text-ink">
+    <span class="text-section leading-snug group-hover:underline group-hover:underline-offset-2">
+      {title}
+    </span>
+    <PostMeta post={post} class="text-meta text-ink/70" />
+    {description && <p class="m-0 mt-3 text-body">{description}</p>}
+  </div>
+</a>

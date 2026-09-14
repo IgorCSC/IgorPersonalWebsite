@@ -14,3 +14,6 @@ node_modules/
 *.swp
 .vscode/
 .idea/
+
+# claude code (personal, per-project)
+.claude/settings.local.json
