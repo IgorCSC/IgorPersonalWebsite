@@ -17,7 +17,7 @@ const blog = defineCollection({
         title: z.string(),
         date: z.coerce.date(),
         lang: z.enum(['EN', 'PTBR']),
-        /* Only the three most recent posts show their cover, but any post may carry one. */
+        /* Only the two most recent posts show their cover, but any post may carry one. */
         cover: image().optional(),
         coverAlt: z.string().optional(),
         description: z.string().optional(),

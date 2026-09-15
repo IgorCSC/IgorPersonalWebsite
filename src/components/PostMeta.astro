@@ -1,14 +1,27 @@
 ---
 import type { Post } from '../utils/posts';
-import { formatPostMeta, isoDate } from '../utils/posts';
+import { formatPostMeta, isoDate, readingStats } from '../utils/posts';
 
 interface Props {
   post: Post;
   class?: string;
+  /*
+    Off by default. The `past` archive prints one line per post and reading
+    times there would be a column of numbers nobody asked for -- it is a list
+    you scan for a title, not one you budget time against.
+  */
+  reading?: boolean;
 }
 
-const { post, class: className } = Astro.props;
+const { post, class: className, reading = false } = Astro.props;
+const stats = reading ? readingStats(post) : null;
 ---
-<time datetime={isoDate(post.data.date)} class={className}>
-  {formatPostMeta(post.data)}
-</time>
+{/*
+  The `<time>` wraps only the date. Reading stats sit outside it: they are not a
+  point in time, and putting them inside would make the machine-readable
+  `datetime` disagree with the element's own text.
+*/}
+<span class={className}>
+  <time datetime={isoDate(post.data.date)}>{formatPostMeta(post.data)}</time>
+  {stats && ` — ${stats.words.toLocaleString('en-US')} words, ${stats.minutes} min read`}
+</span>

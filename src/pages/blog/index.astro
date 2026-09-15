@@ -21,6 +21,16 @@ const posts = (await getCollection('blog', ({ data }) => import.meta.env.DEV || 
 */
 const recent = posts.slice(0, 2);
 const past = posts.slice(2);
+
+/*
+  TRIAL -- on approval, keep it or delete it.
+
+  Word count and reading time in the archive column. Flip this to `false` to see
+  the column as title-and-date only; that is the whole switch, nothing else has
+  to change. To remove the experiment outright, delete this constant and the
+  `reading={...}` it feeds on the archive's PostMeta below.
+*/
+const SHOW_READING_IN_ARCHIVE = true;
 ---
 
 <Base
@@ -65,7 +75,17 @@ const past = posts.slice(2);
                     {post.data.title}
                   </a>
                   {'. '}
-                  <PostMeta post={post} />
+                  {/*
+                    Smaller and dimmer than the title it trails. The archive is a
+                    list you scan for titles, so the date and reading stats step
+                    back to a supporting weight rather than competing at the same
+                    size as the link.
+                  */}
+                  <PostMeta
+                    post={post}
+                    reading={SHOW_READING_IN_ARCHIVE}
+                    class="text-meta text-ink/55"
+                  />
                 </li>
               ))}
             </ul>
